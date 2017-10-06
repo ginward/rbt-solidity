@@ -80,24 +80,31 @@ library RedBlackTree {
                 } else {
                     if ((n == tree.items[p].right) && (p == tree.items[g].left)) {
                         rotateLeft(tree, p);
-                        n = tree.items[n].left; 
+                        n = tree.items[n].left;
                     } else if ((n == tree.items[p].left) && (p == tree.items[g].right)) {
                         rotateRight(tree, p);
                         n = tree.items[n].right; 
                     }
 
-                    tree.items[p].red = false;
-                    tree.items[g].red = true;
-
-                    if ((n == tree.items[p].left) && (p == tree.items[g].left)) {
-                        rotateRight(tree, g);
-                    } else {
-                        rotateLeft(tree, g);
-                    }
+                    insert2(tree, n);
                 }
             }
         }
-    }    
+    }
+
+    function insert2(Tree storage tree, uint64 n) internal {
+        uint64 p = tree.items[n].parent;
+        uint64 g = grandparent(tree, n);
+
+        tree.items[p].red = false;
+        tree.items[g].red = true;
+
+        if ((n == tree.items[p].left) && (p == tree.items[g].left)) {
+            rotateRight(tree, g);
+        } else {
+            rotateLeft(tree, g);
+        }
+    }
 
     function remove(Tree storage tree, uint64 n) internal {
         uint64 successor;
