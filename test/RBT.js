@@ -161,6 +161,17 @@ contract("RedBlackTree", () => {
             return testDelete(initialValues, 1, finalStates);
         });
 
+        it("should handle case when sibling is black and it's both children are black ", () => {
+            const initialValues = [4, 8, 15];
+            const finalStates = [       
+                undefined,        
+                {value: 8, parent: 0, left: 0, right: 3, red: false},
+                {value: 15, parent: 2, left: 0, right: 0, red: true}
+            ];
+
+            return testDelete(initialValues, 1, finalStates);
+        });
+
         describe("when sibling is black and at least one of sibling's children is red", () => {
             it("should handle the right right case", () => {
                 const initialValues = [4, 8, 15, 16, 23];
@@ -210,7 +221,8 @@ contract("RedBlackTree", () => {
                 ];
 
                 return testDelete(initialValues, 3, finalStates);
-            });            
+            });
+                        
         });
 
         function testDelete(initialValues, removeId, finalStates) {
@@ -224,6 +236,51 @@ contract("RedBlackTree", () => {
                 .then(() => rbt.remove(ids[removeId - 1]))
                 .then(() => assertStates(ids, finalStates));
         }
+
+        describe("when sibling is red", () => {
+            it("should handle the right case", () => {
+                const initialValues = [10, 20, 30, 25, 35, 24];
+                const finalStates = [
+                    undefined,
+                    {value: 20, parent: 3, left: 0, right: 4, red: false},
+                    {value: 30, parent: 0, left: 2, right: 5, red: false},  
+                    {value: 25, parent: 2, left: 0, right: 0, red: true},
+                    {value: 35, parent: 3, left: 0, right: 0, red: false},
+                    undefined,
+                ];
+                
+                return testDelete(initialValues, 6, 1, finalStates);
+            });
+
+            it("should handle the left case", () => {
+                const initialValues = [30, 20, 10, 5, 15, 4];
+                const finalStates = [
+                    undefined,
+                    {value: 20, parent: 3, left: 5, right: 0, red: false},
+                    {value: 10, parent: 0, left: 4, right: 2, red: false},  
+                    {value: 5, parent: 3, left: 0, right: 0, red: false},
+                    {value: 15, parent: 2, left: 0, right: 0, red: true},
+                    undefined,
+                ];
+                
+                return testDelete(initialValues, 6, 1, finalStates);
+            });
+
+            function testDelete(initialValues, initialRemoval, removeId, finalStates) {
+                let ids;
+                return insertValues(initialValues)
+                    .then((res) => {
+                        ids = res;
+                    })
+                    .then(() => rbt.remove(ids[initialRemoval - 1]))
+                    .then(() => {
+                        console.log("Initial tree:");
+                        return printTree();
+                    })
+                    .then(() => rbt.remove(ids[removeId - 1]))
+                    .then(() => assertStates(ids, finalStates));
+            }
+        });
     });
 
     function insertValues(values) {
