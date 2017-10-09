@@ -212,7 +212,7 @@ library RedBlackTree {
                 }
 
                 tree.items[s].red = tree.items[p].red;
-                tree.items[p].red = true;
+                tree.items[p].red = false;
 
                 if (n == tree.items[p].left) {
                     tree.items[sRight].red = false;

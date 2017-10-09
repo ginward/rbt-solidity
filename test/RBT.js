@@ -17,123 +17,214 @@ contract("RedBlackTree", () => {
             .then((res) => printTree());
     });
 
-    it("should insert a new item as root", () => {
-        const value = 5;
-        return insert(value)
-            .then((id) => assertRoot(id))
-            .then(() => assertItemState(id, {parent: 0, left:0, right: 0, value: value, red: false}));
-    });
-
-    it("should color a new node in red if parent is black", () => {
-        const values = [5, 6];
-        const states = [
-            {value: 5, parent: 0, left: 0, right: 2, red: false},
-            {value: 6, parent: 1, left: 0, right: 0, red: true}
-        ];
-        let ids;
-        return insertValues(values)
-            .then((res) => {
-                ids = res;
-                return assertStates(ids, states)
-            });;
-    });
-
-    it("should color parent and uncle nodes in black if both of them are red", () => {
-        const values = [10, 15, 5, 8];
-        const states = [
-            {value: 10, parent: 0, left: 3, right: 2, red: false},
-            {value: 15, parent: 1, left: 0, right: 0, red: false},
-            {value: 5, parent: 1, left: 0, right: 4, red: false},
-            {value: 8, parent: 3, left: 0, right: 0, red: true}
-        ];
-        let ids;
-        return insertValues(values)
-            .then((res) => {
-                ids = res;
-                return assertStates(ids, states)
-            });;
-    });
-    
-    describe("when parent is red and uncle is black", () => {        
-        it("should handle the left left case", () => {
-            const initialValues = [42, 23, 16, 15, 8, 4];
-            const keyValue = 2;
-            const finalStates = [
-                {value: 42, parent: 2, left: 0, right: 0, red: false},
-                {value: 23, parent: 0, left: 4, right: 1, red: false},
-                {value: 16, parent: 4, left: 0, right: 0, red: false},
-                {value: 15, parent: 2, left: 6, right: 3, red: true},
-                {value: 8, parent: 6, left: 0, right: 0, red: true},
-                {value: 4, parent: 4, left: 7, right: 5, red: false},
-                {value: 2, parent: 6, left: 0, right: 0, red: true}
-            ];
-
-            return testInsert(initialValues, keyValue, finalStates);
+    describe("Insertion", () => {
+        it("should insert a new item as root", () => {
+            const value = 5;
+            return insert(value)
+                .then((id) => assertRoot(id))
+                .then(() => assertItemState(id, {parent: 0, left:0, right: 0, value: value, red: false}));
         });
 
-        it("should handle the left right case", () => {
-            const initialValues = [42, 23, 16, 15, 8, 4];
-            const keyValue = 6;
-            const finalStates = [
-                {value: 42, parent: 2, left: 0, right: 0, red: false},
-                {value: 23, parent: 0, left: 4, right: 1, red: false},
-                {value: 16, parent: 4, left: 0, right: 0, red: false},
-                {value: 15, parent: 2, left: 7, right: 3, red: true},
-                {value: 8, parent: 7, left: 0, right: 0, red: true},
-                {value: 4, parent: 7, left: 0, right: 0, red: true},
-                {value: 6, parent: 4, left: 6, right: 5, red: false}
+        it("should color a new node in red if parent is black", () => {
+            const values = [5, 6];
+            const states = [
+                {value: 5, parent: 0, left: 0, right: 2, red: false},
+                {value: 6, parent: 1, left: 0, right: 0, red: true}
             ];
-
-            return testInsert(initialValues, keyValue, finalStates);
+            let ids;
+            return insertValues(values)
+                .then((res) => {
+                    ids = res;
+                    return assertStates(ids, states)
+                });;
         });
 
-        it("should handle the right right case", () => {
-            const initialValues = [4, 8, 15, 16, 23, 42];
-            const keyValue = 48;
-            const finalStates = [
-                {value: 4, parent: 2, left: 0, right: 0, red: false},                
-                {value: 8, parent: 0, left: 1, right: 4, red: false},
-                {value: 15, parent: 4, left: 0, right: 0, red: false},
-                {value: 16, parent: 2, left: 3, right: 6, red: true},
-                {value: 23, parent: 6, left: 0, right: 0, red: true},
-                {value: 42, parent: 4, left: 5, right: 7, red: false},
-                {value: 48, parent: 6, left: 0, right: 0, red: true}
+        it("should color parent and uncle nodes in black if both of them are red", () => {
+            const values = [10, 15, 5, 8];
+            const states = [
+                {value: 10, parent: 0, left: 3, right: 2, red: false},
+                {value: 15, parent: 1, left: 0, right: 0, red: false},
+                {value: 5, parent: 1, left: 0, right: 4, red: false},
+                {value: 8, parent: 3, left: 0, right: 0, red: true}
             ];
-
-            return testInsert(initialValues, keyValue, finalStates);
+            let ids;
+            return insertValues(values)
+                .then((res) => {
+                    ids = res;
+                    return assertStates(ids, states)
+                });;
         });
+        
+        describe("when parent is red and uncle is black", () => {        
+            it("should handle the left left case", () => {
+                const initialValues = [42, 23, 16, 15, 8, 4];
+                const keyValue = 2;
+                const finalStates = [
+                    {value: 42, parent: 2, left: 0, right: 0, red: false},
+                    {value: 23, parent: 0, left: 4, right: 1, red: false},
+                    {value: 16, parent: 4, left: 0, right: 0, red: false},
+                    {value: 15, parent: 2, left: 6, right: 3, red: true},
+                    {value: 8, parent: 6, left: 0, right: 0, red: true},
+                    {value: 4, parent: 4, left: 7, right: 5, red: false},
+                    {value: 2, parent: 6, left: 0, right: 0, red: true}
+                ];
 
-        it("should handle the right left case", () => {
-            const initialValues = [4, 8, 15, 16, 23, 42];
-            const keyValue = 36;
-            const finalStates = [
-                {value: 4, parent: 2, left: 0, right: 0, red: false},                
-                {value: 8, parent: 0, left: 1, right: 4, red: false},
-                {value: 15, parent: 4, left: 0, right: 0, red: false},
-                {value: 16, parent: 2, left: 3, right: 7, red: true},
-                {value: 23, parent: 7, left: 0, right: 0, red: true},
-                {value: 42, parent: 7, left: 0, right: 0, red: true},
-                {value: 36, parent: 4, left: 5, right: 6, red: false}
-            ];
-
-            return testInsert(initialValues, keyValue, finalStates);
-        });
-    });
-
-    let ids;    
-    function testInsert(initialValues, keyValue, finalStates) {
-        return insertValues(initialValues)
-            .then((res) => {
-                ids = res;
-                console.log("Initial tree:");
-                return printTree();
-            })
-            .then(() => insert(keyValue))
-            .then((res) => {
-                ids.push(res);
-                return assertStates(ids, finalStates);
+                return testInsert(initialValues, keyValue, finalStates);
             });
-    }
+
+            it("should handle the left right case", () => {
+                const initialValues = [42, 23, 16, 15, 8, 4];
+                const keyValue = 6;
+                const finalStates = [
+                    {value: 42, parent: 2, left: 0, right: 0, red: false},
+                    {value: 23, parent: 0, left: 4, right: 1, red: false},
+                    {value: 16, parent: 4, left: 0, right: 0, red: false},
+                    {value: 15, parent: 2, left: 7, right: 3, red: true},
+                    {value: 8, parent: 7, left: 0, right: 0, red: true},
+                    {value: 4, parent: 7, left: 0, right: 0, red: true},
+                    {value: 6, parent: 4, left: 6, right: 5, red: false}
+                ];
+
+                return testInsert(initialValues, keyValue, finalStates);
+            });
+
+            it("should handle the right right case", () => {
+                const initialValues = [4, 8, 15, 16, 23, 42];
+                const keyValue = 48;
+                const finalStates = [
+                    {value: 4, parent: 2, left: 0, right: 0, red: false},                
+                    {value: 8, parent: 0, left: 1, right: 4, red: false},
+                    {value: 15, parent: 4, left: 0, right: 0, red: false},
+                    {value: 16, parent: 2, left: 3, right: 6, red: true},
+                    {value: 23, parent: 6, left: 0, right: 0, red: true},
+                    {value: 42, parent: 4, left: 5, right: 7, red: false},
+                    {value: 48, parent: 6, left: 0, right: 0, red: true}
+                ];
+
+                return testInsert(initialValues, keyValue, finalStates);
+            });
+
+            it("should handle the right left case", () => {
+                const initialValues = [4, 8, 15, 16, 23, 42];
+                const keyValue = 36;
+                const finalStates = [
+                    {value: 4, parent: 2, left: 0, right: 0, red: false},                
+                    {value: 8, parent: 0, left: 1, right: 4, red: false},
+                    {value: 15, parent: 4, left: 0, right: 0, red: false},
+                    {value: 16, parent: 2, left: 3, right: 7, red: true},
+                    {value: 23, parent: 7, left: 0, right: 0, red: true},
+                    {value: 42, parent: 7, left: 0, right: 0, red: true},
+                    {value: 36, parent: 4, left: 5, right: 6, red: false}
+                ];
+
+                return testInsert(initialValues, keyValue, finalStates);
+            });
+        });
+
+        function testInsert(initialValues, keyValue, finalStates) {
+            let ids;
+            return insertValues(initialValues)
+                .then((res) => {
+                    ids = res;
+                    console.log("Initial tree:");
+                    return printTree();
+                })
+                .then(() => insert(keyValue))
+                .then((res) => {
+                    ids.push(res);
+                    return assertStates(ids, finalStates);
+                });
+        }
+    });
+
+    describe("Deletion", () => {
+        it("should just delete red node", () => {
+            const initialValues = [8, 15, 16, 4];
+            const finalStates = [
+                {value: 8, parent: 2, left: 0, right: 0, red: false},
+                {value: 15, parent: 0, left: 1, right: 3, red: false},
+                {value: 16, parent: 2, left: 0, right: 0, red: false},
+            ];
+
+            return testDelete(initialValues, 4, finalStates);
+        });
+
+        it("should delete black node, replace it with red child, and mark it black", () => {
+            const initialValues = [8, 15, 16, 4];
+            const finalStates = [
+                undefined,
+                {value: 15, parent: 0, left: 4, right: 3, red: false},
+                {value: 16, parent: 2, left: 0, right: 0, red: false},                
+                {value: 4, parent: 2, left: 0, right: 0, red: false}
+            ];
+
+            return testDelete(initialValues, 1, finalStates);
+        });
+
+        describe("when sibling is black and at least one of sibling's children is red", () => {
+            it("should handle the right right case", () => {
+                const initialValues = [4, 8, 15, 16, 23];
+                const finalStates = [       
+                    undefined,        
+                    {value: 8, parent: 4, left: 0, right: 3, red: false},
+                    {value: 15, parent: 2, left: 0, right: 0, red: true},
+                    {value: 16, parent: 0, left: 2, right: 5, red: false},
+                    {value: 23, parent: 4, left: 0, right: 0, red: false}
+                ];
+
+                return testDelete(initialValues, 1, finalStates);
+            });
+
+            it("should handle the right left case", () => {
+                const initialValues = [4, 8, 15, 12];
+                const finalStates = [
+                    undefined,       
+                    {value: 8, parent: 4, left: 0, right: 0, red: false},
+                    {value: 15, parent: 4, left: 0, right: 0, red: false},
+                    {value: 12, parent: 0, left: 2, right: 3, red: false}
+                ];
+
+                return testDelete(initialValues, 1, finalStates);
+            });
+
+            it("should handle the left left case", () => {
+                const initialValues = [23, 16, 15, 8, 4];
+                const finalStates = [       
+                    undefined,        
+                    {value: 16, parent: 4, left: 3, right: 0, red: false},
+                    {value: 15, parent: 2, left: 0, right: 0, red: true},
+                    {value: 8, parent: 0, left: 5, right: 2, red: false},
+                    {value: 4, parent: 4, left: 0, right: 0, red: false}
+                ];
+
+                return testDelete(initialValues, 1, finalStates);
+            });
+
+            it("should handle the left right case", () => {
+                const initialValues = [4, 15, 16, 8];
+                const finalStates = [
+                    {value: 4, parent: 4, left: 0, right: 0, red: false},
+                    {value: 15, parent: 4, left: 0, right: 0, red: false},                
+                    undefined,
+                    {value: 8, parent: 0, left: 1, right: 2, red: false}
+                ];
+
+                return testDelete(initialValues, 3, finalStates);
+            });            
+        });
+
+        function testDelete(initialValues, removeId, finalStates) {
+            let ids;
+            return insertValues(initialValues)
+                .then((res) => {
+                    ids = res;
+                    console.log("Initial tree:");
+                    return printTree();
+                })
+                .then(() => rbt.remove(ids[removeId - 1]))
+                .then(() => assertStates(ids, finalStates));
+        }
+    });
 
     function insertValues(values) {
         let pr = Promise.resolve();
@@ -186,6 +277,9 @@ contract("RedBlackTree", () => {
     }
 
     function assertItemState(id, state) {
+        if (!state) {
+            state = {parent: 0, left: 0, right: 0, value: 0, red: false};
+        }
         return getItem(id)
             .then((item) => {
                 assert.equal(item.parent, state.parent, "parent");
@@ -252,14 +346,14 @@ contract("RedBlackTree", () => {
             return Promise.resolve();
 
         let item;
-        const ll = Math.floor((l + r) / 2);
+        const m = Math.floor((l + r) / 2);
         return getItem(id)
             .then((res) => {
                 item = res;
-                result[i][ll] = item;
+                result[i][m] = item;
             })
-            .then(() => fill(item.left, i + 1, l, Math.floor((l + r + 1) / 2)))
-            .then(() => fill(item.right, i + 1, ll, r));
+            .then(() => fill(item.left, i + 1, l, m))
+            .then(() => fill(item.right, i + 1, m, r));
     }
 
     function getHeight(id) {
