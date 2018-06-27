@@ -46,6 +46,26 @@ library RedBlackTree {
         placeAfter(tree, parent, id, value);
     }
 
+    function getMinimum(Tree storage tree) constant returns (uint64 minNodeId){
+        //code to get minimum node
+        uint64 id = tree.root;
+        
+        while (id!=0){
+            minNodeId=id;
+            id=tree.items[id].left;
+        }
+    }
+
+    function getMaximum(Tree storage tree) constant returns (uint64 maxNodeId){
+        //code to get maximum node
+        uint64 id = tree.root;
+        maxNodeId=id;
+        while (id!=0){
+            maxNodeId=id;
+            id = tree.items[id].right;
+        }
+    }
+
     function placeAfter(Tree storage tree, uint64 parent, uint64 id, uint value) internal {
         Item memory item;        
         item.value = value;
